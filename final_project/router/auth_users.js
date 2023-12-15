@@ -50,8 +50,8 @@ regd_users.post("/login", (req,res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-    let {message,star} = req.body;
-    if (!message || !star) {
+    let review = req.query.review;
+    if (!review) {
         return res.status(200).json({message: `Nothing to review.`});
     }
 
@@ -65,7 +65,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
       return res.status(404).json(`Book with ISBN ${req.params.isbn} not found!`);
     }
     
-    foundBook.reviews[sessionUsername] = {message, star};
+    foundBook.reviews[sessionUsername] = {review};
     
   return res.status(200).json({message: `Book review for ISBN ${req.params.isbn} has been added.`});
 });
