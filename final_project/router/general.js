@@ -73,7 +73,11 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author',function (req, res) {
     let booksByAuthor = Object.keys(books)
         .filter(isbn => books[isbn].author == req.params.author)
-        .map(isbn => books[isbn]);
+        .map(isbn => {
+          const book = books[isbn];
+          book.isbn = isbn;
+          return book;
+        });
     return res.status(200).json(booksByAuthor);
 });
 
@@ -92,7 +96,11 @@ public_users.get("/author/:author/async", async (req, res, next) => {
 public_users.get('/title/:title',function (req, res) {
     let booksByTitle = Object.keys(books)
         .filter(isbn => books[isbn].title == req.params.title)
-        .map(isbn => books[isbn]);
+        .map(isbn => {
+          const book = books[isbn];
+          book.isbn = isbn;
+          return book;
+        });
     return res.status(200).json(booksByTitle);
 });
 
@@ -110,7 +118,6 @@ public_users.get("/title/:title/async", async (req, res, next) => {
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     let booksReviewsByIsbn = books[req.params.isbn].reviews;
-
     return res.status(200).json(booksReviewsByIsbn);
 });
 
