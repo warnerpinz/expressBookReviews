@@ -5,6 +5,8 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 const axios = require('axios');
 
+const API_BASE_URL = "http://localhost:6000";
+
 public_users.post("/register", (req,res) => {
   /**
    * The code should take the ‘username’ and ‘password’ provided in the body of the request for registration. 
@@ -30,10 +32,10 @@ public_users.get('/',function (req, res) {
   return res.status(200).json(books);
 });
 
-public_users.get("/books", async (req, res, next) => {
+public_users.get("/async", async (req, res, next) => {
   let books = {};
   try {
-    const response = await axios.get("http://localhost:6000/");
+    const response = await axios.get(API_BASE_URL);
     return res.status(200).json(response.data);
   } catch(err) {
     console.error(err);
@@ -54,6 +56,17 @@ public_users.get('/isbn/:isbn',function (req, res) {
 
     return res.status(404).json({message: `Book with ISBN ${req.params.isbn} not found!`});
  });
+
+ public_users.get("/isbn/:isbn/async", async (req, res, next) => {
+  let books = {};
+  try {
+    const response = await axios.get(`${API_BASE_URL}/isbn/${req.params.isbn}`);
+    return res.status(200).json(response.data);
+  } catch(err) {
+    console.error(err);
+    return res.status(200).json(books);
+  }
+})
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
@@ -63,6 +76,17 @@ public_users.get('/author/:author',function (req, res) {
     return res.status(200).json(booksByAuthor);
 });
 
+public_users.get("/author/:author/async", async (req, res, next) => {
+  let books = {};
+  try {
+    const response = await axios.get(`${API_BASE_URL}/author/${req.params.author}`);
+    return res.status(200).json(response.data);
+  } catch(err) {
+    console.error(err);
+    return res.status(200).json(books);
+  }
+})
+
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     let booksByTitle = Object.keys(books)
@@ -70,6 +94,17 @@ public_users.get('/title/:title',function (req, res) {
         .map(isbn => books[isbn]);
     return res.status(200).json(booksByTitle);
 });
+
+public_users.get("/title/:title/async", async (req, res, next) => {
+  let books = {};
+  try {
+    const response = await axios.get(`${API_BASE_URL}/title/${req.params.title}`);
+    return res.status(200).json(response.data);
+  } catch(err) {
+    console.error(err);
+    return res.status(200).json(books);
+  }
+})
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
