@@ -4,8 +4,9 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 const axios = require('axios');
+const appConfig = require('../config.json');
 
-const API_BASE_URL = "http://localhost:6000";
+const API_BASE_URL = `${appConfig.baseUrl}:${appConfig.port}`;
 
 public_users.post("/register", (req,res) => {
   /**
